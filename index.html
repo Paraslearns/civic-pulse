@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CivicPulse — Delhi NCR</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="topbar.css" />
+  <link rel="stylesheet" href="landing.css" />
+  <link rel="stylesheet" href="loginpage.css" />
+  <link rel="stylesheet" href="dashboard.css" />
+  <link rel="stylesheet" href="submit.css" />
+  <link rel="stylesheet" href="authority.css" />
+  <link rel="stylesheet" href="leaderboard.css" />
+  <link rel="stylesheet" href="shop.css" />
+  
+
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      window.gmapsReady = true;
+      if (window.pendingMapInit) window.pendingMapInit();
+    });
+  </script>
+</head>
+
+<body>
+
+  
+  <div id="custom-cursor">
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+  </div>
+
+  
+  <div id="view-landing" class="view active">
+    <canvas id="landing-canvas"></canvas>
+    <div id="landing-cards-bg"></div>
+    <div id="cursor-glow"></div>
+
+    <nav id="landing-nav">
+      <div class="landing-brand">
+        <span class="ln-icon">🏛️</span>
+        <span class="ln-name">CivicPulse</span>
+      </div>
+      <div class="landing-nav-right">
+        <button class="landing-login-btn" onclick="goToLogin()">Login →</button>
+      </div>
+    </nav>
+
+    <div id="landing-body">
+      <div id="landing-left">
+        <div class="login-logo">
+          <div class="logo-icon">🏛️</div>
+          <div class="logo-pulse"></div>
+        </div>
+        <div class="landing-eyebrow">Delhi NCR Civic Platform</div>
+        <h1 class="login-title">Civic<span class="title-accent">Pulse</span></h1>
+        <p class="login-tagline">Community Issue Reporting &amp; Resolution</p>
+        <p class="login-desc">Report local civic issues, vote on community problems, and track resolution — built for
+          all Delhi NCR citizens.</p>
+
+        <div class="login-stat-row">
+          <div class="login-stat-item">
+            <div class="lsi-num" id="cnt-issues">0</div>
+            <div class="lsi-label">Issues Reported</div>
+          </div>
+          <div class="login-stat-item">
+            <div class="lsi-num" id="cnt-rate">0%</div>
+            <div class="lsi-label">Resolution Rate</div>
+          </div>
+          <div class="login-stat-item">
+            <div class="lsi-num" id="cnt-citizens">0K+</div>
+            <div class="lsi-label">Active Citizens</div>
+          </div>
+        </div>
+
+        <div class="login-issue-ticker">
+          <div class="ticker-label">LIVE ISSUES — NCR</div>
+          <div id="ticker-track"></div>
+        </div>
+
+        <footer class="login-footer">
+          <div class="by-label">Project by</div>
+          <div class="team">Paras Jain · Somya Sharma · Anupriya Agarwal</div>
+          <div class="college">B.Tech CSE · K.R. Mangalam University · 2025–26</div>
+        </footer>
+      </div>
+
+      <div id="landing-right">
+        <div class="landing-cta-card">
+          <div class="cta-eyebrow">Join your community</div>
+          <h2 class="cta-heading">Make Delhi NCR better</h2>
+          <p class="cta-desc">Submit geotagged issue reports, upvote community problems, and watch your city improve —
+            across Delhi, Gurugram, Noida, Faridabad &amp; Ghaziabad.</p>
+
+          <div class="cta-features">
+            <div class="cta-feat"><span class="cf-icon">📍</span><span>Geotagged Issue Reports</span></div>
+            <div class="cta-feat"><span class="cf-icon">▲</span><span>Community Upvoting</span></div>
+            <div class="cta-feat"><span class="cf-icon">📊</span><span>Real-time Status Tracking</span></div>
+            <div class="cta-feat"><span class="cf-icon">⚡</span><span>Civic Score &amp; Leaderboard</span></div>
+            <div class="cta-feat"><span class="cf-icon">✨</span><span>AI Auto-Classification</span></div>
+          </div>
+
+          <button class="cta-main-btn" onclick="goToLogin()">Get Started &mdash; It's Free →</button>
+          <p class="cta-note">Demo mode · No real data is submitted</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div id="view-login" class="view">
+    <div id="login-particles"></div>
+
+    <header class="login-header">
+      <button class="back-btn login-back" onclick="goToLanding()">← Back</button>
+      <div class="login-header-brand">
+        <span>🏛️</span>
+        <span class="brand-name" style="font-size:15px">CivicPulse</span>
+      </div>
+      <div style="width:80px"></div>
+    </header>
+
+    <div class="login-body-wrap">
+      <div id="login-left-panel">
+        <div class="login-logo" style="margin-bottom:12px">
+          <div class="logo-icon">🏛️</div>
+          <div class="logo-pulse"></div>
+        </div>
+        <h1 class="login-title" style="font-size:42px">Civic<span class="title-accent">Pulse</span></h1>
+        <p class="login-tagline">Community Issue Reporting &amp; Resolution</p>
+        <p class="login-desc">Report local civic issues, vote on community problems, and track resolution — built for
+          all Delhi NCR citizens.</p>
+        <div class="login-stat-row" style="margin-top:24px">
+          <div class="login-stat-item">
+            <div class="lsi-num">2,847</div>
+            <div class="lsi-label">Issues Reported</div>
+          </div>
+          <div class="login-stat-item">
+            <div class="lsi-num">95%</div>
+            <div class="lsi-label">Resolution Rate</div>
+          </div>
+          <div class="login-stat-item">
+            <div class="lsi-num">12K+</div>
+            <div class="lsi-label">Active Citizens</div>
+          </div>
+        </div>
+
+        <div class="llp-divider"></div>
+
+        <div class="llp-pills">
+          <span class="llp-pill"><span class="llp-pill-icon">📍</span>Geotagged Reports</span>
+          <span class="llp-pill"><span class="llp-pill-icon">▲</span>Community Upvoting</span>
+          <span class="llp-pill"><span class="llp-pill-icon">📊</span>Live Tracking</span>
+          <span class="llp-pill"><span class="llp-pill-icon">✨</span>AI Classification</span>
+          <span class="llp-pill"><span class="llp-pill-icon">⚡</span>Civic Score</span>
+        </div>
+
+        <div class="llp-feed">
+          <div class="llp-feed-header">
+            <span class="llp-live-dot"></span>
+            Live Activity — Delhi NCR
+          </div>
+          <div class="llp-feed-row">
+            <span class="llp-feed-emoji">🚰</span>
+            <span class="llp-feed-text">Pipe burst on MG Road reported</span>
+            <span class="llp-feed-loc">Delhi</span>
+            <span class="llp-feed-status wip">In Progress</span>
+          </div>
+          <div class="llp-feed-row">
+            <span class="llp-feed-emoji">💡</span>
+            <span class="llp-feed-text">Power outage — Sector 14 resolved</span>
+            <span class="llp-feed-loc">Gurugram</span>
+            <span class="llp-feed-status ok">Resolved</span>
+          </div>
+          <div class="llp-feed-row">
+            <span class="llp-feed-emoji">🚧</span>
+            <span class="llp-feed-text">Pothole near metro gate · 24 upvotes</span>
+            <span class="llp-feed-loc">Noida</span>
+            <span class="llp-feed-status new">Reported</span>
+          </div>
+          <div class="llp-feed-row">
+            <span class="llp-feed-emoji">🚦</span>
+            <span class="llp-feed-text">Signal malfunction at Dwarka Sec-10</span>
+            <span class="llp-feed-loc">Dwarka</span>
+            <span class="llp-feed-status ok">Resolved</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="login-right">
+        <div class="login-form-header">
+          <h2 id="auth-mode-title">Sign In</h2>
+          <p class="subtitle" id="auth-mode-subtitle">Welcome back — select your portal</p>
+        </div>
+
+        
+        <div class="auth-mode-switcher">
+          <button class="auth-mode-btn active" id="mode-signin" onclick="setAuthMode('signin')">Sign In</button>
+          <button class="auth-mode-btn" id="mode-signup" onclick="setAuthMode('signup')">Sign Up</button>
+        </div>
+
+        
+        <div class="tab-switcher">
+          <button data-tab="citizen" class="active" onclick="setLoginTab('citizen')">👤 Citizen</button>
+          <button data-tab="authority" onclick="setLoginTab('authority')">🏛️ Authority</button>
+        </div>
+
+        
+        <div class="form-group" id="name-group" style="display:none">
+          <label>Full Name <span class="req">*</span></label>
+          <input id="login-name" type="text" placeholder="Your full name" oninput="clearLoginError()" />
+        </div>
+        <div class="form-group">
+          <label>Email <span class="req">*</span></label>
+          <input id="login-email" type="email" placeholder="john.doe@example.com" required
+            oninput="clearLoginError()" />
+        </div>
+        <div class="form-group">
+          <label>Password <span class="req">*</span></label>
+          <div class="pw-wrap">
+            <input id="login-password" type="password" placeholder="Enter your password" required
+              oninput="clearLoginError(); if(state.authMode==='signup') checkPasswordStrength(this.value); else { const w=document.getElementById('pw-strength-wrap'); if(w) w.style.display='none'; }"
+              onkeydown="if(event.key==='Enter')handleLogin()" />
+            <button class="pw-toggle" type="button" onclick="togglePassword()">👁</button>
+          </div>
+        </div>
+        <div id="pw-strength-wrap" style="display:none;margin-top:6px">
+          <div id="pw-strength-bars" style="display:flex;gap:3px;margin-bottom:5px">
+            <div class="pw-bar" id="pwb1"></div>
+            <div class="pw-bar" id="pwb2"></div>
+            <div class="pw-bar" id="pwb3"></div>
+            <div class="pw-bar" id="pwb4"></div>
+          </div>
+          <div id="pw-rules" style="display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;font-size:10px">
+            <div id="pr-upper" class="pw-rule">✗ Uppercase letter</div>
+            <div id="pr-lower" class="pw-rule">✗ Lowercase letter</div>
+            <div id="pr-num" class="pw-rule">✗ Number</div>
+            <div id="pr-spec" class="pw-rule">✗ Special character</div>
+          </div>
+        </div>
+
+        
+        <div class="form-group" id="confirm-pw-group" style="display:none">
+          <label>Confirm Password <span class="req">*</span></label>
+          <div class="pw-wrap">
+            <input id="login-password-confirm" type="password" placeholder="Re-enter your password"
+              oninput="clearLoginError()" onkeydown="if(event.key==='Enter')handleLogin()" />
+            <button class="pw-toggle" type="button" onclick="toggleConfirmPassword()">👁</button>
+          </div>
+        </div>
+
+        <div id="login-error" class="login-error hidden"></div>
+        <button id="login-btn" onclick="handleLogin()">Access Citizen Portal →</button>
+        <p class="demo-note" id="auth-mode-note">Already have an account? <a href="#"
+            onclick="setAuthMode('signin');return false;" style="color:var(--accent);text-decoration:none">Sign in</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  
+  <header id="topbar" class="hidden">
+    <div class="brand" onclick="goHome()">
+      <span>🏛️</span>
+      <span class="brand-name">CivicPulse</span>
+      <button class="ward-tag-btn" id="ward-tag-btn" onclick="event.stopPropagation();openWardModal()">Ward 15</button>
+    </div>
+    <div class="nav-links">
+      <span id="topbar-nav"></span>
+      <span id="topbar-user"></span>
+      <button class="theme-toggle-btn" onclick="toggleTheme()">
+        <span class="theme-icon-all">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  
+  <div id="view-dashboard" class="view">
+    <div id="dashboard-body">
+      <aside id="sidebar">
+        <div id="sidebar-stats">
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="num" id="stat-active" style="color:#3b82f6">0</div>
+              <div class="lbl">Active</div>
+            </div>
+            <div class="stat-card">
+              <div class="num" id="stat-resolved" style="color:#22c55e">0</div>
+              <div class="lbl">Resolved</div>
+            </div>
+            <div class="stat-card">
+              <div class="num" id="stat-my-reports" style="color:#a855f7">0</div>
+              <div class="lbl">My Reports</div>
+            </div>
+          </div>
+          <button id="report-btn" onclick="initSubmit()">+ Report New Issue</button>
+        </div>
+        <div id="filter-bar"></div>
+        <div id="issue-list">
+          <div id="issue-count"></div>
+          <div id="issue-cards"></div>
+        </div>
+      </aside>
+
+      <main id="map-area">
+        <div id="ward-map-wrap">
+          <div id="google-map"></div>
+          <div id="map-loading">
+            <div class="map-spinner"></div><span>Loading map…</span>
+          </div>
+        </div>
+        <div id="detail-panel">
+          <div id="detail-main">
+            <div id="detail-badges" class="detail-badges"></div>
+            <div id="detail-title" class="detail-title"></div>
+            <div id="detail-desc" class="detail-desc"></div>
+            <div id="detail-photo-wrap" style="display:none;margin-top:10px">
+              <img id="detail-photo" src="" alt="Issue photo"
+                style="width:100%;border-radius:8px;max-height:110px;object-fit:cover" />
+            </div>
+            <div id="detail-meta" class="detail-meta"></div>
+          </div>
+          <div id="detail-side">
+            <div class="pipeline-label">Resolution Pipeline</div>
+            <div id="pipeline-steps"></div>
+          </div>
+          <button id="detail-close" onclick="selectIssue(null)">×</button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  
+  <div id="view-submit" class="view">
+    <header class="sub-header">
+      <button class="back-btn" onclick="navigate('dashboard')">← Back</button>
+      <span class="sub-header-title">Report a Civic Issue</span>
+    </header>
+    <div id="submit-body">
+      <div id="stepper">
+        <div class="step-item">
+          <div class="step-num active">1</div>
+          <div class="step-label active">Describe Issue</div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-label">Location &amp; Details</div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-label">Review &amp; Submit</div>
+        </div>
+      </div>
+
+      <div id="submit-card">
+        
+        <div class="step-panel active" id="step-1">
+          <h2>Describe the Issue</h2>
+          <p class="sub">Our AI module will auto-classify the category and urgency. Attach a photo for faster
+            resolution.</p>
+          <label class="field-label">Description *</label>
+          <textarea id="s1-desc" class="text-area"
+            placeholder="E.g.: There is a large pothole near the main gate of our colony that has caused multiple accidents..."
+            oninput="state.submitForm.description=this.value"></textarea>
+          <label class="field-label" style="margin-top:16px">Photo Evidence <span
+              style="font-weight:400;color:#94a3b8;font-size:10px;text-transform:none">(optional but
+              recommended)</span></label>
+          <div class="photo-upload-area" id="photo-upload-area"
+            onclick="document.getElementById('photo-input').click()">
+            <input type="file" id="photo-input" accept="image/*" style="display:none"
+              onchange="handlePhotoUpload(event)" />
+            <div id="photo-placeholder">
+              <div class="upload-icon">📷</div>
+              <div class="upload-text">Click to attach a photo</div>
+              <div class="upload-sub">JPG · PNG · WEBP · Max 10 MB</div>
+            </div>
+            <div id="photo-preview-wrap" style="display:none"><img id="photo-preview" src="" alt="Preview" /><button
+                class="photo-remove" onclick="event.stopPropagation();removePhoto()">✕ Remove</button></div>
+          </div>
+          <button id="ai-classify-btn" onclick="runAI()">✨ AI Auto-Classify</button>
+          <div id="ai-error">AI classification unavailable. Please fill in details manually.</div>
+          <div id="ai-result">
+            <div class="ai-title">✨ AI CLASSIFICATION RESULT</div>
+            <div class="ai-grid">
+              <div class="ai-item">
+                <div class="ai-key">CATEGORY</div>
+                <div class="ai-val" id="ai-cat">—</div>
+              </div>
+              <div class="ai-item">
+                <div class="ai-key">URGENCY</div>
+                <div class="ai-val" id="ai-urg">—</div>
+              </div>
+              <div class="ai-item">
+                <div class="ai-key">SUGGESTED TITLE</div>
+                <div class="ai-val" id="ai-sug-title">—</div>
+              </div>
+              <div class="ai-item">
+                <div class="ai-key">EST. RESOLUTION</div>
+                <div class="ai-val" id="ai-est">—</div>
+              </div>
+            </div>
+            <div class="ai-reasoning" id="ai-reasoning"></div>
+          </div>
+          <div class="form-nav end"><button class="btn-primary" onclick="goStep(2)" id="s1-next">Next: Location
+              →</button></div>
+        </div>
+
+        
+        <div class="step-panel" id="step-2">
+          <h2>Location &amp; Details</h2>
+          <div class="form-group" style="margin-bottom:16px">
+            <label class="field-label">Issue Title *</label>
+            <input id="s2-title" class="text-input" placeholder="E.g. Pothole at sector 54 junction"
+              oninput="state.submitForm.title=this.value;updateStep2NextBtn()" />
+          </div>
+          <div class="form-group" style="margin-bottom:8px">
+            <label class="field-label">Location * <span
+                style="font-weight:400;color:#94a3b8;font-size:10px;text-transform:none;letter-spacing:0">(search or
+                drop pin on map)</span></label>
+            <div class="location-search-wrap">
+              <input id="location-search" class="text-input" placeholder="Search address in Delhi NCR…"
+                oninput="state.submitForm.location=this.value;updateStep2NextBtn()" />
+              <button class="locate-me-btn" onclick="locateMe()">📍 Locate Me</button>
+            </div>
+          </div>
+          <div id="submit-map-wrap">
+            <div id="submit-map"></div>
+            <div id="submit-map-loading">
+              <div class="map-spinner"></div>
+            </div>
+            <div id="submit-map-hint">📌 Click anywhere on the map to drop a pin</div>
+          </div>
+          <div id="latlng-display" class="latlng-display" style="display:none"></div>
+          <div style="margin-bottom:16px;margin-top:16px"><label class="field-label">Category *</label>
+            <div id="cat-grid" class="cat-grid"></div>
+          </div>
+          <div style="margin-bottom:16px"><label class="field-label">Urgency Level</label>
+            <div id="urgency-grid" class="urgency-grid"></div>
+          </div>
+          <div class="form-nav">
+            <button class="btn-secondary" onclick="goStep(1)">← Back</button>
+            <button class="btn-primary" id="s2-next" onclick="goStep(3)" disabled>Review →</button>
+          </div>
+        </div>
+
+        
+        <div class="step-panel" id="step-3">
+          <h2>Review &amp; Submit</h2>
+          <p class="sub">Your report will be routed to the relevant NCR Municipal Officer.</p>
+          <div id="review-box">
+            <div class="review-badges"><span id="review-cat-badge"></span><span id="review-urgency-badge"></span></div>
+            <div id="review-title" class="review-title"></div>
+            <div id="review-location" class="review-loc"></div>
+            <div id="review-latlng" class="review-latlng" style="display:none"></div>
+            <div id="review-desc" class="review-desc"></div>
+            <div id="review-photo-wrap" style="display:none;margin-top:12px">
+              <div style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:4px;letter-spacing:.5px">PHOTO
+                ATTACHED</div>
+              <img id="review-photo" src="" alt=""
+                style="width:100%;border-radius:8px;max-height:140px;object-fit:cover" />
+            </div>
+          </div>
+          <div id="review-info">✅ A Civic ID will be assigned and the issue auto-routed to the NCR authority. You'll
+            receive status updates at every stage.</div>
+          <div class="form-nav">
+            <button class="btn-secondary" onclick="goStep(2)">← Edit</button>
+            <button class="btn-submit" onclick="handleSubmitIssue()">Submit Report 🚀</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div id="view-success" class="view">
+    <div id="success-card">
+      <div class="check">✅</div>
+      <h2>Issue Reported!</h2>
+      <p>Your report has been submitted to the relevant NCR Municipal Authority. You'll receive notifications at each
+        status update.</p>
+      <div id="civic-id-box">
+        <div class="id-label">CIVIC ID ASSIGNED</div>
+        <div class="id-num" id="success-civic-id">CP-2025-1049</div>
+        <div class="id-title" id="success-issue-title"></div>
+      </div>
+      <div id="points-box">⚡ +10 Civic Points added to your score!</div>
+      <button id="back-to-dash" onclick="handleBackToDashboard()">Return to Dashboard</button>
+    </div>
+  </div>
+
+  
+  <div id="view-authority" class="view">
+    <header id="authority-header">
+      <div class="ah-left">
+        <div class="brand ah-brand" onclick="goHome()">
+          <span style="font-size:16px">🏛️</span>
+          <span class="ah-title">CivicPulse Authority Panel</span>
+        </div>
+        <span class="ah-tag">Ward Officer</span>
+      </div>
+      <div class="ah-right">
+        <span class="ah-name" id="ah-name-display">Ward Officer · Ward 15</span>
+        <button class="auth-fullmap-btn" onclick="openAuthFullMap()">⛶ Full Map</button><button class="auth-govt-btn"
+          onclick="showGovtIntegrations()">🏛️ Govt Links</button><button class="theme-toggle-btn ah-theme-btn"
+          onclick="toggleTheme()"><span class="theme-icon-all">🌙</span></button>
+        <button class="logout-btn" onclick="handleLogout()">Logout</button>
+      </div>
+    </header>
+
+    <div id="authority-body">
+      <div class="auth-stats">
+        <div class="auth-stat-card">
+          <div class="asn" id="auth-stat-reported" style="color:#94a3b8">0</div>
+          <div class="asl">🔴 Reported</div>
+        </div>
+        <div class="auth-stat-card">
+          <div class="asn" id="auth-stat-ack" style="color:#f59e0b">0</div>
+          <div class="asl">🟡 Acknowledged</div>
+        </div>
+        <div class="auth-stat-card">
+          <div class="asn" id="auth-stat-inprogress" style="color:#3b82f6">0</div>
+          <div class="asl">🔵 In Progress</div>
+        </div>
+        <div class="auth-stat-card">
+          <div class="asn" id="auth-stat-resolved" style="color:#22c55e">0</div>
+          <div class="asl">🟢 Resolved</div>
+        </div>
+      </div>
+
+      <div id="auth-map-wrap">
+        <div id="auth-map"></div>
+        <div id="auth-map-loading">
+          <div class="map-spinner"></div><span>Loading map…</span>
+        </div>
+      </div>
+
+      <div class="auth-grid">
+        <div class="auth-queue">
+          <div class="auth-queue-header">
+            <h3>Issue Queue — NCR</h3>
+            <div class="auth-filter-group">
+              <button class="auth-filter-btn active" data-filter="All" onclick="setAuthFilter('All')">All</button>
+              <button class="auth-filter-btn" data-filter="Reported"
+                onclick="setAuthFilter('Reported')">Reported</button>
+              <button class="auth-filter-btn" data-filter="In Progress" onclick="setAuthFilter('In Progress')">In
+                Progress</button>
+            </div>
+            <select class="sort-select" onchange="setAuthSort(this.value)" style="margin-left:6px">
+              <option value="priority">🔺 Priority</option>
+              <option value="upvotes">▲ Most Voted</option>
+              <option value="date">📅 Newest</option>
+            </select>
+          </div>
+          <div id="auth-issue-list"></div>
+        </div>
+        <div class="auth-detail">
+          <div id="auth-detail-empty">
+            <div style="font-size:44px;margin-bottom:10px">📋</div>
+            <div style="font-size:14px;font-weight:600">Select an issue</div>
+            <div style="font-size:12px;margin-top:3px">Click any item in the queue to view details</div>
+          </div>
+          <div id="auth-detail-panel">
+            <div id="auth-detail-head">
+              <div id="adh-id" class="adh-id"></div>
+              <h3 id="adh-title" class="adh-title"></h3>
+              <div id="adh-badges" class="adh-badges"></div>
+            </div>
+            <div id="auth-detail-body">
+              <p id="adb-desc" class="adb-desc"></p>
+              <div id="adb-photo-wrap" style="display:none;margin-bottom:14px">
+                <div style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;letter-spacing:.5px">PHOTO
+                  EVIDENCE</div>
+                <img id="adb-photo" src="" alt=""
+                  style="width:100%;border-radius:8px;max-height:160px;object-fit:cover" />
+              </div>
+              <div id="adb-meta" class="adb-meta"></div>
+              <button id="auth-advance-btn"></button>
+              <div class="audit-label">Audit Trail</div>
+              <div id="audit-trail"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+      <div id="grant-points-panel">
+        <div class="gp-header">
+          <div class="gp-title-wrap">
+            <span class="gp-icon">⚡</span>
+            <div>
+              <div class="gp-title">Grant Civic Points</div>
+              <div class="gp-subtitle">Award points to any citizen in your ward</div>
+            </div>
+          </div>
+          <button class="gp-toggle-btn" onclick="toggleGrantPanel()">
+            <span id="gp-toggle-label">Expand</span> ▾
+          </button>
+        </div>
+
+        <div id="gp-body" class="gp-body" style="display:none">
+          <div class="gp-search-row">
+            <div class="gp-field">
+              <label class="gp-label">Search Citizen</label>
+              <div class="gp-search-wrap">
+                <input id="gp-citizen-search" type="text" class="gp-input" placeholder="Type a name or ward…"
+                  oninput="filterGrantCitizens(this.value)" autocomplete="off" />
+                <div id="gp-citizen-dropdown" class="gp-dropdown hidden"></div>
+              </div>
+            </div>
+            <div class="gp-field gp-field-pts">
+              <label class="gp-label">Points to Grant</label>
+              <div class="gp-pts-wrap">
+                <button class="gp-pts-preset" onclick="setGrantPts(10)">+10</button>
+                <button class="gp-pts-preset" onclick="setGrantPts(25)">+25</button>
+                <button class="gp-pts-preset" onclick="setGrantPts(50)">+50</button>
+                <button class="gp-pts-preset" onclick="setGrantPts(100)">+100</button>
+                <input id="gp-pts-input" type="number" class="gp-input gp-pts-input" min="1" max="9999"
+                  placeholder="Custom…" oninput="state.grantPts=parseInt(this.value)||0;_updateGrantBtn()" />
+              </div>
+            </div>
+          </div>
+
+          <div id="gp-selected-card" class="gp-selected-card hidden">
+            <div class="gp-sel-avatar" id="gp-sel-avatar">?</div>
+            <div class="gp-sel-info">
+              <div class="gp-sel-name" id="gp-sel-name">—</div>
+              <div class="gp-sel-meta" id="gp-sel-meta">—</div>
+            </div>
+            <div class="gp-sel-score">
+              <div class="gp-sel-score-num" id="gp-sel-score">0</div>
+              <div class="gp-sel-score-lbl">current pts</div>
+            </div>
+          </div>
+
+          <div class="gp-bottom-row">
+            <div class="gp-field" style="flex:1">
+              <label class="gp-label">Reason <span style="color:var(--text4);font-weight:400">(optional)</span></label>
+              <input id="gp-reason" type="text" class="gp-input"
+                placeholder="e.g. Exemplary report quality, Community effort…" />
+            </div>
+            <button id="gp-submit-btn" class="gp-submit-btn" onclick="handleGrantPoints()" disabled>
+              ⚡ Grant Points
+            </button>
+          </div>
+
+          <div id="gp-toast" class="gp-toast hidden"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  
+  <div id="view-leaderboard" class="view">
+    <header id="lb-header">
+      <button class="back-btn" onclick="navigate('dashboard')">← Back</button>
+      <span class="lb-title">🏆 Civic Leaderboard — Delhi NCR</span>
+    </header>
+
+    
+    <div id="lb-scope-bar">
+      <div class="lb-scope-tabs">
+        <button class="lb-scope-btn active" data-scope="overall" onclick="setLbScope('overall')">🌐 Overall NCR</button>
+        <button class="lb-scope-btn" data-scope="ward" onclick="setLbScope('ward')">📍 Ward-wise</button>
+        <button class="lb-scope-btn" data-scope="personal" onclick="setLbScope('personal')">👤 My Stats</button>
+      </div>
+      <div id="lb-ward-picker" class="lb-ward-picker hidden">
+        <label class="lb-ward-picker-label">Filter by ward:</label>
+        <select id="lb-ward-select" onchange="setLbWard(this.value)" class="lb-ward-select">
+          <option value="all">All Wards</option>
+          <option value="Ward 14">Ward 14</option>
+          <option value="Ward 15">Ward 15</option>
+          <option value="Ward 16">Ward 16</option>
+          <option value="Ward 17">Ward 17</option>
+          <option value="Ward 20">Ward 20</option>
+          <option value="Ward 22">Ward 22</option>
+          <option value="Ward 25">Ward 25</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="lb-body">
+      
+      <div id="podium"></div>
+
+      
+      <div id="lb-personal-card" class="hidden"></div>
+
+      <div id="lb-table">
+        <div class="lb-head">
+          <div class="lb-head-cell">#</div>
+          <div class="lb-head-cell">Citizen</div>
+          <div class="lb-head-cell">Score</div>
+          <div class="lb-head-cell">Reports</div>
+          <div class="lb-head-cell">Resolved</div>
+        </div>
+        <div id="lb-rows"></div>
+      </div>
+      <div id="lb-info">
+        💡 <strong>How Civic Score works:</strong> +10 pts per valid report · +2 pts per upvote given · +25 pts when
+        your issue is resolved
+      </div>
+    </div>
+  </div>
+
+  
+  <div id="view-shop" class="view">
+
+    
+    <div id="shop-header">
+      <div class="shop-header-inner">
+        <div class="shop-header-top">
+          <div class="shop-title-wrap">
+            <h1>🛍️ Civic Rewards Shop</h1>
+            <p>Redeem your Civic Points for exclusive rewards. Keep reporting — keep earning!</p>
+          </div>
+          <div class="shop-balance">
+            <div class="shop-bal-icon">⚡</div>
+            <div>
+              <div class="shop-bal-num" id="shop-bal-num">245</div>
+              <div class="shop-bal-label">Your Points</div>
+            </div>
+          </div>
+        </div>
+        <div class="shop-tab-bar" id="shop-tab-bar">
+          <button class="shop-tab active" data-cat="All" onclick="setShopCat('All')">All Rewards</button>
+          <button class="shop-tab" data-cat="Collectibles" onclick="setShopCat('Collectibles')">🏅 Collectibles</button>
+          <button class="shop-tab" data-cat="Food & Drink" onclick="setShopCat('Food & Drink')">🍕 Food & Drink</button>
+          <button class="shop-tab" data-cat="Transport" onclick="setShopCat('Transport')">🚌 Transport</button>
+          <button class="shop-tab" data-cat="Entertainment" onclick="setShopCat('Entertainment')">🎬
+            Entertainment</button>
+          <button class="shop-tab" data-cat="Wellness" onclick="setShopCat('Wellness')">🧘 Wellness</button>
+          <button class="shop-tab" data-cat="Eco" onclick="setShopCat('Eco')">🌱 Eco</button>
+        </div>
+      </div>
+    </div>
+
+    
+    <div id="shop-body">
+      <div class="shop-how-banner">
+        <p>🎁 <strong>How redemption works:</strong> Select a reward, enter your details, and we'll send your voucher
+          code by email within 24 hours. Points are deducted immediately.</p>
+        <div class="shop-how-steps">
+          <div class="shop-how-step"><span class="shsi">📍</span> Report issues → earn points</div>
+          <div class="shop-how-step"><span class="shsi">▲</span> Upvote → +2 pts each</div>
+          <div class="shop-how-step"><span class="shsi">✅</span> Issue resolved → +25 pts</div>
+        </div>
+      </div>
+      <div id="shop-grid"></div>
+    </div>
+
+    
+    <div id="shop-orders-section">
+      <div class="shop-section-title">📦 Your Orders</div>
+      <div id="shop-orders-list"></div>
+    </div>
+
+  </div>
+
+  
+  <div id="redeem-modal-overlay" onclick="closeRedeemModal(event)">
+    <div id="redeem-modal">
+      
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="script.js"></script>
+  <script src="script_supabase_patch.js"></script>
+  <script src="loginanimation.js"></script>
+  <script>
+    function goStep(n) { state.submitStep = n; renderSubmit(); }
+  </script>
+</body>
+
+</html>
